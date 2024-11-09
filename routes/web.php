@@ -126,14 +126,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/scaleup/sessionGetSubCategory', [ScaleUpController::class, 'sessionGetSubCategory'])->name('scaleup.sessionGetSubCategory');
     Route::put('/scaleup/updateItemcategory', [ScaleUpController::class, 'updateItemcategory'])->name('scaleup.updateItemcategory');
     Route::delete('/scaleup/deleteItemcategory', [ScaleUpController::class, 'deleteItemcategory'])->name('scaleup.deleteItemcategory');
-    Route::get('/scaleup/compare', [ScaleUpController::class, 'compare'])->name('scaleup.compare')->middleware(['role_or_permission:admin|scaleup-compare']);
+    // Route::get('/scaleup/compare', [ScaleUpController::class, 'compare'])->name('scaleup.compare')->middleware(['role_or_permission:admin|scaleup-compare']);
     Route::get('/scaleup/listScaleUp', [ScaleUpController::class, 'listScaleUp'])->name('scaleup.listScaleUp');
+    Route::get('/scaleup/listToSubmit', [ScaleUpController::class, 'listToSubmit'])->name('scaleup.listToSubmit');
     // Route::get('/scaleup/listScaleUp', [ScaleUpController::class, 'listScaleUp'])->name('scaleup.listScaleUp')->middleware(['role_or_permission:admin|scaleup-compare|formula-create']);
     Route::post('/scaleup/getByID', [ScaleUpController::class, 'getByID'])->name('scaleup.getByID');
     Route::post('/scaleup/getHeader', [ScaleUpController::class, 'getHeader'])->name('scaleup.getHeader');
 
     Route::get('scaleup/flow', [ScaleUpController::class, 'flow'])->name('scaleup.flow');
     Route::get('scaleup/complete', [ScaleUpController::class, 'complete'])->name('scaleup.complete');
+    Route::get('scaleup/submit', [ScaleUpController::class, 'submit'])->name('scaleup.submit');
+    Route::post('scaleup/submit', [ScaleUpController::class, 'submitStore'])->name('scaleup.submitStore');
     // Route::get('scaleup/{id}', [ScaleUpController::class, 'show'])->name('scaleup.show');
     Route::get('scaleup/{id}', [ScaleUpController::class, 'showWithKeyCode'])->name('scaleup.show');
 

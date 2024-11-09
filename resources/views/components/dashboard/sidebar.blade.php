@@ -106,17 +106,20 @@
                                 <span data-key="t-calendar">List Scale Up Completed</span>
                             </a>
                         </li>
+                        <li>
+                            <a href="{{ route('scaleup.submit') }}">
+                                <span data-key="t-calendar">Submit Scaleup</span>
+                            </a>
+                        </li>
 
 
-
-
-                        @can('scaleup-compare')
+                        {{-- @can('scaleup-compare')
                             <li>
                                 <a href="{{ route('scaleup.compare') }}">
                                     <span data-key="t-chat">Compare Scale Up</span>
                                 </a>
                             </li>
-                        @endcan
+                        @endcan --}}
                     </ul>
                 </li>
                 {{-- Draft --}}

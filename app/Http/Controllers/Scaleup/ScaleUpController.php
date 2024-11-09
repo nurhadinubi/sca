@@ -172,6 +172,27 @@ class ScaleUpController extends Controller
 		// dd($material);
 		return response()->json($material, 200);
 	}
+	public function listToSubmit(Request $request)
+	{
+		$q = strtolower($request->q);
+		$material = DB::table('scaleup_header as sh')
+			// ->where('sh.user_id', Auth::user()->id)
+			->where('sh.status', 'A')
+			->where(function ($query) {
+				$query->whereNull('sh.is_push')
+					->orWhere('sh.is_push', false);
+			})
+			->where(function ($query) use ($q) {
+				$query->whereRaw('LOWER(sh.doc_number) LIKE ?', ['%' . $q . '%'])
+					->whereRaw('sh.is_push')
+					->orWhereRaw('LOWER(sh.product_code) LIKE ?', ['%' . $q . '%'])
+					->orWhereRaw('LOWER(sh.material_description) LIKE ?', ['%' . $q . '%']);
+			})
+			->orderBy('sh.product_code')
+			->get();
+		// dd($material);
+		return response()->json($material, 200);
+	}
 
 	function getMaterialById(Request $request)
 	{
@@ -1402,6 +1423,24 @@ class ScaleUpController extends Controller
 			dd($th);
 			// abort(500);
 		}
+	}
+
+
+	public function submit()
+	{
+		return view('scaleup.submit');
+	}
+	public function submitStore(Request $request)
+	{
+		$id = $request->scaleup_id;
+		$scaleupHeader = ScaleUpHeader::findOrFail($id);
+		$scaleupHeader->is_push = true;
+		$scaleupHeader->save();
+
+		return redirect('/')->with(['message' => [
+			"type" => "success",
+			"text" => "Scaleup sudah disubmit agar bisa dibuatkan formula"
+		]]);
 	}
 
 	public function compare()
