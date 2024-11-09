@@ -222,8 +222,6 @@ class ScaleUpController extends Controller
 		return view('scaleup.create', compact('doctype', 'itemCart', 'itemCategory'));
 	}
 
-
-
 	public function show($id)
 	{
 		$doc_number = "";
