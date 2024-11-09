@@ -1,0 +1,17 @@
+.sorting_desc_disabled::after{
+  right: 0px !important;
+}
+
+.form-control{
+  background-color: #fff !important;
+}
+
+.required::after {
+  content: '*';
+  margin-right: 4px;
+  color: red;
+}
+
+input.form-read-only{
+  background-color: #f8f9fa !important;
+}
