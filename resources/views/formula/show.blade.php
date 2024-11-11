@@ -1,6 +1,6 @@
 @extends('layouts.template')
 
-@section('title', 'Detail Scale Up - ' . $header->doc_number)
+@section('title', 'Detail Formula Semi Finish - ' . $header->doc_number)
 
 @section('content')
     <div class="row">

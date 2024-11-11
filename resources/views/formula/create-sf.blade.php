@@ -13,7 +13,7 @@
         @endif --}}
         <div class="card">
             <div class="card-body">
-                <form action="{{ route('sf.store') }}" method="post" id="form-scaleup"
+                  <form action="{{ route('sf.storeWithKeycode',['id'=>$keycode->key_code]) }}" method="post" id="form-scaleup"
                     data-listScaleUp="{{ route('scaleup.listScaleUp') }}">
                     @csrf
 

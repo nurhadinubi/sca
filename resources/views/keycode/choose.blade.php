@@ -27,8 +27,12 @@
                 <div class="card-body">
                     <form action="{{ route('keycode.request') }}" method="post" id="choose-menu"
                         data-listScaleUp="{{ route('scaleup.listScaleUp') }}"
-                        data-productExist="{{ route('ci.productExist') }}" data-productById="{{ route('ci.productById') }}"
-                        data-getHeader="{{ route('scaleup.getHeader') }}">
+                        data-productExist="{{ route('ci.productExist') }}" 
+                        data-productById="{{ route('ci.productById') }}"
+                        data-getHeader="{{ route('scaleup.getHeader') }}"
+                        data-listSemifinish="{{ route('sf.listSemifinish') }}"
+                        data-getHeaderFormula="{{ route('sf.getHeader') }}"
+                        >
                         @csrf
                         <div class="form-group row">
                             <div class="col-md-3">
@@ -46,6 +50,17 @@
                             <div class="col-md-3">
                                 <input type="radio" id="scaleup-print" name="menu" value="scaleup-print">
                                 <label for="scaleup-view">Print Scaleup</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <input type="radio" id="formula-create" name="menu" value="formula-create">
+                                <label for="formula-create">Tambah Formula</label>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="radio" id="formula-edit" name="menu" value="formula-edit">
+                                <label for="formula-edit">Edit Formula</label>
                             </div>
                         </div>
 
@@ -194,12 +209,20 @@
                         toggleProdCodeAccess(true)
                     } else {
                         toggleProdCodeAccess(false)
+
+                        let textPlaceholder = "Pilih Nomor Scale UP";
+                        let attrlistData = $("#choose-menu").attr("data-listScaleUp");
+                        if (this.id === 'formula-edit') {
+                            textPlaceholder = "Pilih Nomor Formula";
+                            attrlistData = $("#choose-menu").attr("data-listSemifinish");
+                        }
+
                         $('#scaleup').closest('.scaleup-select').show();
                         $("#scaleup").select2({
-                            placeholder: "Pilih Nomor Scale UP",
+                            placeholder: textPlaceholder,
                             theme: "bootstrap-5",
                             ajax: {
-                                url: $('#choose-menu').attr("data-listScaleUp"),
+                                url: attrlistData,
                                 type: "get",
                                 dataType: "json",
                                 casesensitive: false,
@@ -216,8 +239,15 @@
                             },
                         });
                         $("#scaleup").on("select2:select", function() {
+
+                            let attrGetHeader = $("#choose-menu").attr("data-getHeader");
+                            if ($('input[type=radio][name=menu]:checked').val() === 'formula-edit') {
+                                console.log($('input[type=radio][name=menu]:checked').val());
+                                attrGetHeader = $("#choose-menu").attr("data-getHeaderFormula");
+                            }
+
                             $.ajax({
-                                url: $('#choose-menu').attr("data-getHeader"),
+                                url: attrGetHeader,
                                 type: "POST",
                                 data: {
                                     _token: token,

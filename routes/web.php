@@ -3,6 +3,7 @@
 use App\Http\Controllers\Approval\ApprovalController;
 use App\Http\Controllers\ExternalController;
 use App\Http\Controllers\Formula\SemiFinishController;
+use App\Http\Controllers\Formula\DuplicateSemiFinishController;
 use App\Http\Controllers\Keycode\KeyCodeController;
 use App\Http\Controllers\Master\DivisionController;
 use App\Http\Controllers\Master\ProductCIController;
@@ -179,8 +180,21 @@ Route::middleware('auth')->group(function () {
     Route::prefix('/formula/sfg')->group(function () {
         Route::get('/', [SemiFinishController::class, 'index'])->name('sf.index');
         Route::get('/show/{id}', [SemiFinishController::class, 'show'])->name('sf.show');
-        Route::get('/create', [SemiFinishController::class, 'create'])->name('sf.create');
-        Route::post('/create', [SemiFinishController::class, 'store'])->name('sf.store');
+
+        // Route::get('/create', [SemiFinishController::class, 'create'])->name('sf.create');
+        // Route::post('/create', [SemiFinishController::class, 'store'])->name('sf.store');
+
+        Route::get('/listSemifinish', [SemiFinishController::class, 'listSemifinish'])->name('sf.listSemifinish');
+        Route::post('/getHeader', [SemiFinishController::class, 'getHeader'])->name('sf.getHeader');
+
+        // FORMULA SFG ADD SHOLEHPRABOE
+        Route::get('/create/{id}', [SemiFinishController::class, 'createWithKeycode'])->name('sf.createWithKeycode')->middleware(['role_or_permission:admin|formula-create']);
+        Route::post('/create/{id}', [SemiFinishController::class, 'storeWithKeycode'])->name('sf.storeWithKeycode')->middleware(['role_or_permission:admin|formula-create']);
+
+        // DUPLICATE SFG FORMULA EDIT SHOLEHPRABOE
+        Route::get('/duplicate/{id}', [DuplicateSemiFinishController::class, 'duplicate'])->name('sf.duplicate')->middleware(['role_or_permission:admin|formula-create|formula-edit']);
+        Route::post('/duplicate/{id}', [DuplicateSemiFinishController::class, 'store'])->name('sf.duplicate.store')->middleware(['role_or_permission:admin|formula-create|formula-edit']);
+    
     });
 
     Route::middleware('role:admin')->prefix('master')->group(function () {

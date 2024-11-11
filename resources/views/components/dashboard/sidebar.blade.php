@@ -165,7 +165,7 @@
                         <li>
                             <a href="javascript: void(0);" class="has-arrow" data-key="t-level-1-2">Tambah Formula</a>
                             <ul class="sub-menu" aria-expanded="true">
-                                <li><a href="{{ route('sf.create') }}" data-key="t-sf">Formula SFG</a></li>
+                                <li><a href="javascript: void(0);" data-key="t-sf">Formula SFG</a></li>
                                 <li><a href="javascript: void(0);" data-key="t-fg">Formula Packing</a></li>
                             </ul>
                         </li>
@@ -173,7 +173,7 @@
                             <a href="javascript: void(0);" class="has-arrow" data-key="t-level-1-2">Formula
                                 Alternatif</a>
                             <ul class="sub-menu" aria-expanded="true">
-                                <li><a href="{{ route('sf.create') }}" data-key="t-sf">Alternatif SFG</a></li>
+                                <li><a href="javascript: void(0);" data-key="t-sf">Alternatif SFG</a></li>
                                 <li><a href="javascript: void(0);" data-key="t-fg">Alternatif Packing</a></li>
                             </ul>
                         </li>

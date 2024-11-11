@@ -16,6 +16,7 @@ npm-debug.log
 yarn-error.log
 feedback.xlsx
 note-28082024.txt
+package-lock.json
 /.fleet
 /.idea
 /.vscode

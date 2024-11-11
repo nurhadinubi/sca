@@ -7,6 +7,7 @@ use App\Mail\AprrovalNotification;
 use App\Models\KeyCode;
 use App\Models\KeycodeApprovalHeader;
 use App\Models\ScaleUpHeader;
+use App\Models\FormulaHeader;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -41,6 +42,19 @@ class KeyCodeController extends Controller
 				break;
 			case "scaleup-print":
 				$approval_type = "scaleup-print";
+				break;
+			case "formula-create":
+				$approval_type = "formula-create";
+				break;
+			case "formula-edit":
+				$approval_type = "formula-edit";
+				$request->formula = $request->scaleup;
+				break;
+			case "formula-display":
+					$approval_type = "formula-display";
+					break;
+			case "formula-print":
+				$approval_type = "formula-print";
 				break;
 			default:
 				$approval_type = null;
@@ -406,6 +420,27 @@ class KeyCodeController extends Controller
 			return redirect()->route('scaleup.show', ['id' => Crypt::encryptString($keycode->key_code)]);
 		}
 
+		// FORMULA
+		if ($keycode->transaction == 'formula-create') {
+			return redirect()->route('sf.createWithKeycode', ['id' => Crypt::encryptString($keycode->key_code)]);
+		}
+
+		// dd( Auth::user()->id, $keycode);
+		if ($keycode->transaction == 'formula-edit') {
+			$formula = FormulaHeader::where('id', $keycode->formula_header_id)
+				->where('user_id', Auth::user()->id)
+				->first();
+			
+			
+			if (!$formula) {
+				return redirect()->back()->with(['message' => [
+					"type" => "error",
+					"text" => "Anda tidak mempunyai authorisasi untuk Edit formula ini"
+				]]);
+			}
+
+			return redirect()->route('sf.duplicate', ['id' => Crypt::encryptString($keycode->key_code)]);
+		}
 
 		return view('keycode.input');
 	}
