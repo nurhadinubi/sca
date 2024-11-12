@@ -18,7 +18,7 @@
                     <a href="javascript: void(0);" class="has-arrow">
                         <i data-feather="file-text"></i>
                         <span data-key="t-apps">Approve Dokumen
-                            <span class="badge text-bg-secondary"> {{ $scaleupPending + $keycodePending }} </span>
+                            <span class="badge text-bg-secondary"> {{ $scaleupPending + $keycodePending + $semiFinishPending}} </span>
                         </span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
@@ -32,14 +32,25 @@
                                 </span>
                             </a>
                         </li>
-                        <li>
 
+                
+
+                        <li>
+                            <a href="{{ route('list.approval.formulaSemifinish') }}">
+                                <span data-key="t-calendar">Approve Semi Finish 
+                                    @if (isset($semiFinishPending) && $semiFinishPending > 0)
+                                        <span class="badge text-bg-secondary">{{ $semiFinishPending }}</span>
+                                    @endif
+                                </span>
+                            </a>
+                        </li>
+
+                        <li>
                             <a href="{{ route('list.approval.keycode') }}">
                                 <span data-key="t-calendar">Approve Key Code 
                                     @if (isset($keycodePending) && $keycodePending > 0)
                                         <span class="badge text-bg-secondary">{{ $keycodePending }}</span>
                                     @endif
-                                  
                                 </span>
                             </a>
                         </li>
@@ -135,7 +146,11 @@
                                 <span data-key="t-calendar">Scale Up</span>
                             </a>
                         </li>
-
+                        <li>
+                            <a href="{{ route('draft.scaleup.index') }}">
+                                <span data-key="t-calendar">Formula Semi Finish</span>
+                            </a>
+                        </li>
 
                         {{-- @can('scaleup-compare')
 

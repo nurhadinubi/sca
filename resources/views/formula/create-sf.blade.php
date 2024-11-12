@@ -1,5 +1,7 @@
 @extends('layouts.template')
 
+@section('title', 'Tambah Formula Semi Finish')
+
 @section('content')
     <div class="">
         @if (session('message'))
@@ -14,7 +16,7 @@
         <div class="card">
             <div class="card-body">
                   <form action="{{ route('sf.storeWithKeycode',['id'=>$keycode->key_code]) }}" method="post" id="form-scaleup"
-                    data-listScaleUp="{{ route('scaleup.listScaleUp') }}">
+                    data-listScaleUp="{{ route('sf.listScaleUp',['id'=>$keycode->key_code]) }}">
                     @csrf
 
                     <div class="col mb-3">
@@ -193,8 +195,12 @@
                                 @endforeach
                             </tbody>
                         </table>
+                    </div>
+
+                    <div class="col-12 d-flex justify-content-end gap-2">
                         <a href="/" class="btn btn-outline-primary">Batal</a>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button class="btn btn-outline-info float-end" name="action" value="draft" type="submit">Simpan Draft</button>
+                        <button class="btn btn-primary float-end" name="action" value="save" type="submit">Save</button>
                     </div>
                 </form>
             </div>
@@ -253,6 +259,7 @@
 
                 var token = $('meta[name="csrf-token"]').attr("content");
                 $("#scaleup").select2({
+                    
                     placeholder: "Pilih Nomor Scale UP",
                     theme: "bootstrap-5",
                     ajax: {

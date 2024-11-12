@@ -27,6 +27,7 @@
                 <div class="card-body">
                     <form action="{{ route('keycode.request') }}" method="post" id="choose-menu"
                         data-listScaleUp="{{ route('scaleup.listScaleUp') }}"
+                        data-listScaleUpPush="{{ route('sf.listScaleUpPush') }}"
                         data-productExist="{{ route('ci.productExist') }}" 
                         data-productById="{{ route('ci.productById') }}"
                         data-getHeader="{{ route('scaleup.getHeader') }}"
@@ -212,7 +213,10 @@
 
                         let textPlaceholder = "Pilih Nomor Scale UP";
                         let attrlistData = $("#choose-menu").attr("data-listScaleUp");
-                        if (this.id === 'formula-edit') {
+
+                        if (this.id === 'formula-create') {
+                            attrlistData = $("#choose-menu").attr("data-listScaleUpPush");
+                        } else if (this.id === 'formula-edit') {
                             textPlaceholder = "Pilih Nomor Formula";
                             attrlistData = $("#choose-menu").attr("data-listSemifinish");
                         }

@@ -36,6 +36,15 @@ class AppServiceProvider extends ServiceProvider
                 ])
                 ->distinct('sh.id')
                 ->count('sh.id');
+            $semiFinishPending = DB::table('bom_approvals as ba')
+                ->join('formula_header as fh', 'fh.id', '=', 'ba.formula_header_id')
+                ->where([
+                    "ba.user_id" => Auth::user()->id,
+                    "ba.status" => "P",
+                    "fh.status" => "P"
+                ])
+                ->distinct('fh.id')
+                ->count('fh.id');
             $keycodePending = DB::table('keycode_approval as ka')
                 ->join('keycode as kk', 'kk.id', 'ka.keycode_id')
                 ->where([
@@ -46,7 +55,7 @@ class AppServiceProvider extends ServiceProvider
                 ->distinct('kk.id')
                 ->count('kk.id');
 
-            $view->with(['scaleupPending' => $scaleupPending, 'keycodePending' => $keycodePending]);
+            $view->with(['scaleupPending' => $scaleupPending, 'semiFinishPending' => $semiFinishPending,  'keycodePending' => $keycodePending]);
         });
     }
 }

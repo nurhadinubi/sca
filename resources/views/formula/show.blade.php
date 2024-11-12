@@ -149,7 +149,7 @@
                                             </div>
                                         @endif
 
-																				@if ($item->status == 'R')
+										@if ($item->status == 'R')
                                             <span class="step-icon">
                                                 <i class="fa fa-times-circle text-danger fa-2x"></i>
                                             </span>Rejected

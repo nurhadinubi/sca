@@ -528,4 +528,171 @@ class PDFController extends Controller
         // Output PDF sebagai inline/ stream
         return $pdf->Output("Print Scaleup-" . $header->product_code . '.pdf', 'I');
     }
+
+    // FORMULA SEMI FINISH
+    public function formulaSemiFinishPDF($id)
+    {
+        try {
+            $doc_number = Crypt::decryptString($id);
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+
+        $header = DB::table('scaleup_header')
+            ->where('doc_number', $doc_number)
+            ->where('user_id', Auth::user()->id)
+            ->first();
+
+        $itemCart = DB::table('scaleup_detail')->where('scaleup_header_id', $header->id)->get();
+        $category_ref = $itemCart->pluck('category_reference')->toArray();
+        $itemCategory = DB::table('item_category')->whereIn('uniqid', $category_ref)->get();
+
+        $pdf = new TCPDFCustom();
+
+        $pdf->SetProtection(array('modify', 'copy', 'annot-forms', 'fill-forms', 'extract', 'assemble', 'print-high'), '', null, 0, null);
+        $pdf->header_data = $header;
+
+        // Set dokumen informasi
+        $pdf->SetCreator('PT. DAESANG AGUNG INDONESIA');
+        $pdf->SetAuthor('PT. DAESANG AGUNG INDONESIA');
+        $pdf->SetTitle('Print Scale Up ' . $header->product_code);
+        $pdf->SetSubject('PDF Generation using TCPDF');
+
+        $pdf->SetMargins(10, 65, 10);
+        $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+        $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+
+        // Set auto page breaks
+        $pdf->SetAutoPageBreak(TRUE, 54);
+
+        // Set font
+        $pdf->SetFont('helvetica', '', 10);
+
+        // Define border margin (in mm)
+
+        // Add a page
+        // Tambahkan halaman baru
+        $pdf->AddPage();
+
+        // Inisialisasi grand total
+        $grandTotalQty = 0;
+        $grandTotalPercent = 0;
+
+        // Mulai HTML dengan style CSS
+        $css = '
+            <style>
+
+                table {
+                    border-collapse: collapse;
+                    width: 100%;
+                    padding: 0.9px 4px;
+
+                }
+                th, td {
+                    border: 0.2px solid #000;
+                    
+                    text-align: left;
+                }
+                th {
+                    background-color: #ccc !important;
+                    text-align: center;
+                }
+                .header-cell {
+                    background-color: #eeeeee;
+                    vertical-align:middle;
+                    text-align:center;
+                   
+                }
+                .rowspan-middle {
+                   line-height:18px;
+                }
+                }
+                .rowspan-single {
+                   line-height:6px;
+                }
+
+                .subtotal-row {
+                    font-weight: bold;
+                }
+
+                
+            </style>
+        ';
+
+        $itemNumber = 1;
+
+        // Iterasi melalui kategori item
+        foreach ($itemCategory as $i) {
+            $itemNumber = 1;
+            // Tambahkan judul kategori
+            $html = $css . '<h4>' . $i->description . '</h4>';
+            // Mulai tabel
+            $html .= '<table>
+                 <thead>
+                    <tr class="header-cell" >
+                        <th class="rowspan-middle" width="5%" align="center" rowspan="2">NO</th>
+                        <th class="rowspan-middle" width="12%" align="center" rowspan="2">Kode SAP</th>
+                        <th class="rowspan-middle" width="30%" rowspan="2" align="center">NAMA BAHAN</th>
+                        <th class="rowspan-single" width="20%" colspan="2" align="center">JUMLAH</th>
+                        <th class="rowspan-middle" width="33%" rowspan="2" align="center">KETERANGAN</th>
+                    </tr>
+                    <tr class="header-cell">
+                        <th class="rowspan-single" width="10%" align="center">Kg</th>
+                        <th class="rowspan-single" width="10%" align="center">%</th>
+                    </tr>
+                 </thead>
+                 <tbody>';
+
+            $subtotalQty = 0;
+            $subtotalPercent = 0;
+
+            // Filter item berdasarkan kategori
+            foreach ($itemCart as $item) {
+                if ($item->category_reference == $i->uniqid) {
+                    // for ($j = 0; $j < 10; $j++) {
+                    $html .= '<tr>
+                            <td width="5%" align="center">' . $itemNumber . '</td>
+                            <td width="12%">' . $item->material_code . '</td>
+                            <td width="30%">' . $item->material_description . '</td>
+                            <td width="10%" align="right">' . number_format(round(($item->percent * $header->total / 100), 2), 2) . '</td>
+                            <td width="10%" align="right">' . number_format($item->percent, 2) . ' </td>
+                            <td width="33%">' . $item->remark . '</td>
+                        </tr>';
+                    $itemNumber++;
+                    $subtotalQty += round(($item->percent * $header->total / 100), 2);
+                    $subtotalPercent += $item->percent;
+                    // }
+                }
+            }
+
+            // Tambahkan subtotal per kategori
+            $html .= '</tbody>
+                        <tfoot>
+                            <tr class="subtotal-row">
+                                <td colspan="2" align="center">TOTAL</td>
+                                <td></td>
+                                <td align="right">' . number_format($subtotalQty, 2) . '</td>
+                                <td align="right">' . number_format($subtotalPercent, 2) . '</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table><br>';
+
+            // Write HTML ke PDF
+            $pdf->writeHTML($html, true, false, true, false, '');
+        }
+
+        // Write HTML ke PDF
+        $html = '<p>Berat Perkemasan :' . $header->per_pack . '</p>
+                 <p>Alasan Perubahan : ' . $header->remark . '</p>
+                 <p>Rev00 : ' . $header->rev0 . '</p>';
+
+        $pdf->writeHTML($html, true, false, true, false, '');
+
+        $pdf->IncludeJS("print();");
+
+        // Output PDF sebagai inline/ stream
+        return $pdf->Output("Print Scaleup-" . $header->product_code . '.pdf', 'I');
+    }
+
 }

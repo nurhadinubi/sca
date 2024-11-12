@@ -152,6 +152,7 @@ class ScaleUpController extends Controller
 	public function listScaleUp(Request $request)
 	{
 		$q = strtolower($request->q);
+		
 
 		// $material = DB::table('scaleup_header as sh')
 		// 	->select('sh.*', 'mm.material_code as material_code', 'mm.material_description as material_desc', 'pc.product_code')

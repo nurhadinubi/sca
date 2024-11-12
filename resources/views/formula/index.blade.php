@@ -52,6 +52,8 @@
                                 <span class="badge text-bg-info"> APPROVED </span>
                             @elseif($item->status == 'R')
                                 <span class="badge text-bg-danger"> REJECTED </span>
+                            @elseif($item->status == 'D')
+                                <span class="badge text-bg-secondary"> DRAFTED </span>
                             @endif
                         </td>
 
@@ -59,10 +61,10 @@
                             <a class="btn btn-sm m-0 px-2 btn-outline-primary " title="Detail" href="{{ route('sf.show', ['id' => base64_encode($item->doc_number)]) }}"
                                 aria-label="hidden"><i class="fa fa-eye"></i></a>
                             @if ($item->status == 'P')
-														{{-- <a class="btn btn-sm m-0 px-2 btn-outline-primary " title="Edit" href="{{ route('scaleup.show', ['id' => base64_encode($item->doc_number)]) }}"
+														{{-- <a class="btn btn-sm m-0 px-2 btn-outline-primary " title="Edit" href="{{ route('sf.show', ['id' => base64_encode($item->doc_number)]) }}"
 															aria-label="hidden"><i class="fa fa-edit"></i></a> --}}
                             @elseif($item->status == 'A')
-														<a class="btn btn-sm m-0 px-2 btn-outline-primary " title="Print" href="{{ route('scaleup.print', ['id' => base64_encode($item->doc_number)]) }}"
+														<a class="btn btn-sm m-0 px-2 btn-outline-primary " title="Print" href="{{ route('sf.print', ['id' => base64_encode($item->doc_number)]) }}"
 															aria-label="hidden"><i class="fa fa-print"></i></a>
      
                             @endif

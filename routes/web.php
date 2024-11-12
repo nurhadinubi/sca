@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Approval\ApprovalController;
+use App\Http\Controllers\Approval\BomApprovalController;
 use App\Http\Controllers\ExternalController;
 use App\Http\Controllers\Formula\SemiFinishController;
 use App\Http\Controllers\Formula\DuplicateSemiFinishController;
@@ -172,14 +173,18 @@ Route::middleware('auth')->group(function () {
     // Approval
     Route::prefix('/approve')->group(function () {
         Route::get('scaleup', [ApprovalController::class, 'needApprove'])->name('list.approval.scaleup');
+        Route::get('formula/semifinish', [BomApprovalController::class, 'needApprove'])->name('list.approval.formulaSemifinish');
         Route::get('keycode', [KeyCodeController::class, 'needApprove'])->name('list.approval.keycode');
         Route::post('scaleup/getApproval', [ApprovalController::class, 'getApproval'])->name('scaleup.getApproval');
+        Route::post('formula/semifinish/getApproval', [BomApprovalController::class, 'getApproval'])->name('formulaSemifinish.getApproval');
     });
 
     // formula
     Route::prefix('/formula/sfg')->group(function () {
         Route::get('/', [SemiFinishController::class, 'index'])->name('sf.index');
         Route::get('/show/{id}', [SemiFinishController::class, 'show'])->name('sf.show');
+        Route::get('/listScaleUpPush', [SemiFinishController::class, 'listScaleUpPush'])->name('sf.listScaleUpPush');
+        Route::get('/listScaleUp/{id}', [SemiFinishController::class, 'listScaleUp'])->name('sf.listScaleUp');
 
         // Route::get('/create', [SemiFinishController::class, 'create'])->name('sf.create');
         // Route::post('/create', [SemiFinishController::class, 'store'])->name('sf.store');
@@ -195,6 +200,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/duplicate/{id}', [DuplicateSemiFinishController::class, 'duplicate'])->name('sf.duplicate')->middleware(['role_or_permission:admin|formula-create|formula-edit']);
         Route::post('/duplicate/{id}', [DuplicateSemiFinishController::class, 'store'])->name('sf.duplicate.store')->middleware(['role_or_permission:admin|formula-create|formula-edit']);
     
+        // APPROVE DOCUMENT FORMULA SEMI FINISH
+        Route::get('/approve/{id}', [SemiFinishController::class, 'approve'])->name('sf.approve');
+        Route::post('/approvestore/{id}', [SemiFinishController::class, 'approvestore'])->name('sf.approvestore');
+
+        Route::get('/print/{id}', [PDFController::class, 'scaleupWithKeyCode'])->name('sf.print');
     });
 
     Route::middleware('role:admin')->prefix('master')->group(function () {
